@@ -1,0 +1,33 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SpyCommunityGovernor
+    network: chapel
+    source:
+      address: "0xC8214D1816916Ce2caC5D468784a654B603c4206"
+      abi: SpyCommunityGovernor
+      startBlock: 22405193
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - ProposalCanceled
+        - ProposalCreated
+        - ProposalExecuted
+        - VoteCast
+      abis:
+        - name: SpyCommunityGovernor
+          file: ./abis/SpyCommunityGovernor.json
+      eventHandlers:
+        - event: ProposalCanceled(uint256)
+          handler: handleProposalCanceled
+        - event: ProposalCreated(uint256,address,uint256,uint256,uint256,string)
+          handler: handleProposalCreated
+        - event: ProposalExecuted(uint256)
+          handler: handleProposalExecuted
+        - event: VoteCast(indexed address,uint256,uint8,uint256,string)
+          handler: handleVoteCast
+      file: ./src/mapping.ts

@@ -1,0 +1,60 @@
+enum ProposalState {
+  Pending
+  Active
+  Succeeded
+  Failed
+  Canceled
+  Queued
+  Executed
+}
+
+type ProposalSummary @entity {
+  id: ID!
+  proposalCount: Int!
+}
+
+type Proposal @entity {
+  id: ID!
+  "created timestamp"
+  timestamp: Int!
+  lastUpdateTimestamp: Int!
+  proposalId: BigInt!
+  proposer: Bytes!
+  startTime: Int!
+  endTime: Int!
+  expiringTime: Int!
+  description: String
+  state: ProposalState!
+  totalCurrentVoters: Int!
+  currentYesVote: BigInt!
+  currentNoVote: BigInt!
+  currentYesVoteCount: Int!
+  currentNoVoteCount: Int!
+  txid: Bytes!
+
+  canceledAt: Int
+  executedAt: Int
+
+  events: [ProposalEvent!]! @derivedFrom(field:"proposal")
+  votes: [Vote!]! @derivedFrom(field:"proposal")
+}
+
+type ProposalEvent @entity {
+  id: ID!
+  state: ProposalState!
+  timestamp: Int!
+  txid: Bytes
+  proposal: Proposal!
+}
+
+type Vote @entity {
+  id: ID!
+
+  voter: Bytes!
+  support: Int!
+  weight: BigInt!
+  reason: String
+  txid: Bytes!
+
+  proposal: Proposal!
+}
